@@ -31,7 +31,7 @@ def download_youtube_audio(url: str, job_dir: str) -> str:
         "quiet": True,
         "extractor_args": {
             "youtube": {
-                "player_client": ["web_safari"]
+                "player_client": ["ios", "android", "mweb"]
             }
         }
     }

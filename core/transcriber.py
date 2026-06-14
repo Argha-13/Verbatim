@@ -50,6 +50,7 @@ def _with_retries(func, *args, label: str = "API call", **kwargs):
                 time.sleep(wait)
             else:
                 print(f"❌ {label} failed after {MAX_RETRIES} attempts: {e}")
+    assert last_err is not None
     raise last_err
 
 
@@ -127,10 +128,14 @@ SARVAM_LANGUAGES = {"hinglish", "benglish", "bengali", "hindi"}
 
 def transcribe_chunk(chunk_path: str, language: str = "english") -> str:
     """
-    Route one chunk to Groq Cloud or Sarvam depending on language choice.
-    - english  → Groq Cloud (Whisper API)
-    - hinglish / benglish / bengali / hindi → Sarvam (translates Indic audio to English)
+    Route one chunk to text passthrough, Groq Cloud, or Sarvam.
     """
+    # Caption-fallback files are already plain text — read and return directly
+    if chunk_path.endswith(".txt"):
+        print(f"📄 Caption text file detected: reading {os.path.basename(chunk_path)} directly...")
+        with open(chunk_path, "r", encoding="utf-8") as f:
+            return f.read().strip()
+
     lang = language.lower()
 
     if lang in SARVAM_LANGUAGES:
@@ -138,10 +143,14 @@ def transcribe_chunk(chunk_path: str, language: str = "english") -> str:
 
     return transcribe_chunk_groq(chunk_path)
 
-
 def transcribe_all(chunks: list, language: str = "english") -> str:
     full_transcript = ""
-    engine = "Sarvam AI SDK" if language.lower() in SARVAM_LANGUAGES else "Groq Hosted Whisper"
+
+    if chunks and chunks[0].endswith(".txt"):
+        engine = "YouTube captions (fallback)"
+    else:
+        engine = "Sarvam AI SDK" if language.lower() in SARVAM_LANGUAGES else "Groq Hosted Whisper"
+
     print(f"Using {engine} for transcription.")
 
     for i, chunk in enumerate(chunks):

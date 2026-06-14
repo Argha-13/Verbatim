@@ -1,4 +1,3 @@
-
 FROM python:3.12-slim
 
 # Set environment variables to keep Python clean and responsive
@@ -22,6 +21,9 @@ RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
 # Copy the entire project code into the container
 COPY . /code/
+
+# 🍪 Ensure the cookies file is explicitly placed in the root execution layer
+COPY youtube_cookies.txt /code/youtube_cookies.txt
 
 # Expose port 8000 for FastAPI
 EXPOSE 8000

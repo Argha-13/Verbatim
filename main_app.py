@@ -15,7 +15,7 @@ import streamlit as st
 # CONFIG
 # ---------------------------------------------------------------------------
 
-BACKEND_URL = "http://127.0.0.1:8000"  # change if your FastAPI backend runs elsewhere
+BACKEND_URL = "https://verbatim-backend-ez6y.onrender.com"
 
 st.set_page_config(
     page_title="Verbatim",

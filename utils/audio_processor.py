@@ -18,6 +18,12 @@ def create_job_dir() -> str:
 
 def download_youtube_audio(url: str, job_dir: str) -> str:
     output_path = os.path.join(job_dir, "%(id)s.%(ext)s")
+    
+    # 🍪 Dynamically locate cookies file at the project root directory
+    current_dir = os.path.dirname(os.path.abspath(__file__)) # utils folder
+    project_root = os.path.abspath(os.path.join(current_dir, "..")) # root folder
+    cookies_path = os.path.join(project_root, "youtube_cookies.txt")
+    
     ydl_opts = {
         "format": "bestaudio/best",
         "outtmpl": output_path,
@@ -29,12 +35,21 @@ def download_youtube_audio(url: str, job_dir: str) -> str:
             }
         ],
         "quiet": True,
+        # Pass the cookies file path if it exists to authenticate with YouTube
+        "cookiefile": cookies_path if os.path.exists(cookies_path) else None,
         "extractor_args": {
             "youtube": {
                 "player_client": ["ios", "android", "mweb"]
             }
         }
     }
+    
+    # Simple print statement to confirm cookies are being detected in your logs
+    if os.path.exists(cookies_path):
+        print(f"🍪 Success: Found cookie authentication file at {cookies_path}")
+    else:
+        print("⚠️ Warning: youtube_cookies.txt not detected at project root.")
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         filename = ydl.prepare_filename(info)

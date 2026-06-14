@@ -19,7 +19,8 @@ langchain>=0.2.0
 langchain-core>=0.2.0
 langchain-community>=0.2.0
 langchain-mistralai>=0.1.0        # LangChain wrapper for Mistral API
-mistralai>=0.4.0                  # Official Mistral Python client
+mistralai>=0.4.0 
+langchain-chroma>=0.1.1           # Official Mistral Python client
 
 # ── RAG Pipeline ──────────────────────────────────────────────────────────────
 chromadb>=0.5.0                   # Local vector store
@@ -53,4 +54,7 @@ sarvamai>=0.1.28
 
 #FastAPI
 fastapi>=0.136.3
-pydantic
+pydantic>=2.7.4
+uvicorn>=0.30.1
+
+python-multipart>=0.0.9
